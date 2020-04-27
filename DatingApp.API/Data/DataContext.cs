@@ -9,7 +9,7 @@ namespace DatingApp.API.Data
         //DbContextOptions method will be called to configure the database (and other options) to be used for this context.
         
         public DbSet<Value> Values {get; set;} // DbSet used when the type of entity is not known at build time.
-
+        public DbSet<User>  User { get; set; } // posle ova moras Migrations, odnosno posle sekoj nov model go pravis ova!!! stavas u DataContext i posle migrationss
      
     }
 }

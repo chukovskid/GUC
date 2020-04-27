@@ -10,7 +10,7 @@ namespace DatingApp.API.Controllers
 {
     [Route("api/[controller]")] // bidejki ovde imam pisano "api/" bara da imame api/ vo linkot a za [Controller]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ValuesController : ControllerBase // ova e BEZ view support, ako bese samo Controller togas e SO view support. na ne ni treba bidejki Angular ke ni gi dade
     {
         private readonly DataContext _context; // ova e za DB koj so ke gi ima vrednostite
         public ValuesController(DataContext context) // ova e za DB gi STAVA vrednostite i e Constructor
@@ -33,7 +33,7 @@ namespace DatingApp.API.Controllers
 
         }
 
-        // GET api/values/5
+        // GET api/values/5 
         [HttpGet("{id}")] // sto zima od link   
         public async Task<IActionResult> GetValue(int id) // so ova valjda go zimam ID od link
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DatingApp.API.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,7 +33,8 @@ namespace DatingApp.API
             // i MORA DA INSTALIRAS Mc.EntityFramework.SQLite!
             services.AddControllers();
             services.AddCors(); // ova go stavam za localhost:5000 da ne go cita kako virus ili hak. ti pisit na googleChrome
-     
+            services.AddScoped<IAuthRepository, AuthRepository>(); // kazuvam deka Interfaceot ke zima od OVOJ Repository.
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
       }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
