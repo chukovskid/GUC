@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Controllers
 {
+
+    //BITNO E DEKA ON IMA [AllowAnonimus] staveno a ti si go utnal toa video
+
+
     [Route("api/[controller]")] // bidejki ovde imam pisano "api/" bara da imame api/ vo linkot a za [Controller]
     [ApiController]
     public class ValuesController : ControllerBase // ova e BEZ view support, ako bese samo Controller togas e SO view support. na ne ni treba bidejki Angular ke ni gi dade
