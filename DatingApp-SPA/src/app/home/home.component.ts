@@ -8,12 +8,10 @@ import { HttpClient } from '@angular/common/http';
 })
 export class HomeComponent implements OnInit {
   registerMode = false;
-  // values: any;
 
   constructor(private http: HttpClient) { } // ova go zima linkot
 
   ngOnInit() {
-    // this.getValues();
   }
 
   registerToggle(){ // so ova VLAGAME u REGISTER MODE (true)
@@ -21,15 +19,6 @@ export class HomeComponent implements OnInit {
   }
 
 
-
-  // getValues(){
-  //   this.http.get('http://localhost:5000/api/values').subscribe(response => {
-  //     this.values = response; // ova ke go ima objektot so vrednosti vo nego i ke gi stavi u VALUES
-
-  //   }, error => {
-  //     console.log(error);
-  //   });
-  // }
 
 
 cancelRegisterMode(registerMode: boolean){

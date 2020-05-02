@@ -51,7 +51,7 @@ namespace DatingApp.API.Controllers
         [HttpPost("login")]       
         public async Task<ActionResult> Login(UserForLoginDto userForLoginDto)
         {
-            // var userFrom Repo ke mi bide gotov model vraten od repo preku login
+            // var userFrom Repo ke mi bide gotov model vraten od repo preku login 
             var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
             // sega imam dobien model, User koj moze e praen(null) ako e takov login ke mi return null;
             if (userFromRepo == null)
@@ -86,8 +86,9 @@ namespace DatingApp.API.Controllers
             return Ok(new {
                 token = tokenHandler.WriteToken(token) // ovoj token go vrakjame na Klientot// bezz tokenHandler nema da go cita, baska ne postoi writeToken() samo
             });
-         }
 
+      
+        }
 
 
     }
