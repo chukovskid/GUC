@@ -17,6 +17,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Diagnostics;
 using DatingApp.API.Helpers;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using AutoMapper;
 
 namespace DatingApp.API
 {
@@ -35,10 +38,26 @@ namespace DatingApp.API
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))); 
             // mora da mu dademe DB a taa ke bide SQLite so pristap Configuration.GetConnectionString("DefaultConnection") koj ke go zeme od **appsetings.json**
             // i MORA DA INSTALIRAS Mc.EntityFramework.SQLite!
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(opt => 
+            {
+                opt.SerializerSettings.ReferenceLoopHandling =
+                Newtonsoft.Json.ReferenceLoopHandling.Ignore; // 76
+            });
             services.AddCors(); // ova go stavam za localhost:5000 da ne go cita kako virus ili hak. ti pisit na googleChrome
+            services.AddAutoMapper(typeof(DatingRepository).Assembly); // DatingRepository e dodadena kako Klasakoja ke go KORISTI AutoMapper
             services.AddScoped<IAuthRepository, AuthRepository>(); // kazuvam deka Interfaceot ke zima od OVOJ Repository.
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
+            services.AddScoped<IDatingRepository, DatingRepository>(); // 72
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options => {
+                 options.TokenValidationParameters = new TokenValidationParameters
+                 {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
+                        .GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                };  // 36
+            });
       }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,6 +94,8 @@ namespace DatingApp.API
             app.UseRouting();
             
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()); // ova e sto dozvoluvame, koj bilo Metod i koj bilo Header
+
+            app.UseAuthentication(); 
 
             app.UseAuthorization();
 

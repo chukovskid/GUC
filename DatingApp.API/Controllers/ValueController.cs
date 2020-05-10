@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DatingApp.API.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,6 @@ namespace DatingApp.API.Controllers
 {
 
     //BITNO E DEKA ON IMA [AllowAnonimus] staveno a ti si go utnal toa video
-
 
     [Route("api/[controller]")] // bidejki ovde imam pisano "api/" bara da imame api/ vo linkot a za [Controller]
     [ApiController]
