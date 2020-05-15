@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {JwtHelperService} from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root' // root kaj nas e app.module.ts
 }) // ccelovo @injectable se dodava bidejki services nemaat inject kako i site drugi modeli ( inportot e ov mislam)
 export class AuthService {
-  baseUrl = 'http://localhost:5000/api/auth/';
+  baseUrl = environment.apiUrl + 'auth/'; // 83
   jwtHelper = new JwtHelperService();
   decodedToken: any;
 

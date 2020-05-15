@@ -1,0 +1,40 @@
+/* za da se zgolemi pri hover 87 */
+.card:hover img{
+    transform: scale(1.2, 1.2);
+    transition-duration: 500ms ;
+    transition-timing-function: ease-out;
+    opacity: 1;
+}
+/* da se vrati vo normalna sostojba posle zoom  87*/
+.card img{
+    transform: scale(1.0, 1.0);
+    transition-duration: 500ms ;
+    transition-timing-function: ease-out;
+    opacity: 0.9;
+}
+
+.card-img-wrapper{
+    overflow: hidden;
+    position: relative;
+} 
+.member-icons {
+    position: absolute;
+    bottom: 30%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0;
+
+}
+
+/* koga ke hovernes na img vraper ke se sluci ova na member-icons */
+.card-img-wrapper:hover .member-icons {
+    bottom: 0;
+    opacity: 1;
+
+}
+
+.animate {
+    transition: all 0.3s ease-in-out;
+}
