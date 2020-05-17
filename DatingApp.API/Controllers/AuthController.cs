@@ -28,7 +28,7 @@ namespace DatingApp.API.Controllers
 
         [HttpPost("register")]
         public async Task<ActionResult> Register(UserForRegisterDto userForRegisterDto)
-        {  //JSON: ovie vrednosti za username i passsword gi dobivam kako JSON file odgovoren e [ApiControler]
+        {  //JSON: ovie vrednosti za username i passsword gi dobivam kako  JSON file odgovoren e [ApiControler]
            // validate request // staviv ModelDto poradi toa sto nego go cita i avtomatski pretvara od JSON
             userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
 

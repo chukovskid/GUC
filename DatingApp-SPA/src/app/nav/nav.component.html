@@ -23,7 +23,7 @@
         Welcome {{authService.decodedToken?.unique_name | titlecase}}
       </button>
       <div class="dropdown-menu mt-2" aria-labelledby="dropdownMenuButton" *dropdownMenu >
-        <a class="dropdown-item" href="#"> <i class="fa fa-user"></i> Edit</a>
+        <a class="dropdown-item" [routerLink]="['/member/edit']" > <i class="fa fa-user"></i> Edit</a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" (click)='logeout()' href="#">  <i class="fa fa-sign-out"></i> Logout</a>
       </div>

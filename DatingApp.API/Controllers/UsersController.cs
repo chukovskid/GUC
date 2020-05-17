@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.Data;
@@ -39,6 +40,23 @@ namespace DatingApp.API.Controllers
 
             var userToReturn = _mapper.Map<UserForDetailedDto>(user); // _mapper go koritsam za da fo isfiltrira pretpostavuvam
             return Ok(userToReturn);
+
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdate )
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            return Unauthorized(); // principov cesto ke bide koristen bidejki ke proveruvam koe ID e logiran
+
+            var userFromRepo = await _repo.GetUser(id);
+            _mapper.Map(userForUpdate, userFromRepo); // Rabotite od userForUpdate STAVI GI VO userFromRepo
+
+            if (await _repo.SaveAll())
+            return NoContent();
+
+            throw new Exception($"Updating used {id} filed to save");
+
 
         }
     }
