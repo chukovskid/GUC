@@ -19,7 +19,8 @@ namespace DatingApp.API.Data
 
          public async Task<User> Login(string username, string password) // sakame password da bide HASH
         {   
-           var user = await _context.User.FirstOrDefaultAsync(x => x.Username == username); // najdi go Userot vo _context koj ima ist Username
+            // vo Login za nav slikata mora da pratam i photo 117 
+           var user = await _context.User.Include(p => p.Photos).FirstOrDefaultAsync(x => x.Username == username); // najdi go Userot vo _context koj ima ist Username
            
             if (user == null){
                  return null;

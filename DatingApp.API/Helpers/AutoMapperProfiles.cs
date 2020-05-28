@@ -23,6 +23,8 @@ namespace DatingApp.API.Helpers
         
         CreateMap<Photo, PhotosForDetailedDto>(); 
         CreateMap<UserForUpdateDto, User>(); 
+        CreateMap<Photo, PhotoForReturnDto>(); //  podatocite od Photo modelot im davam pat do PhotoForReturnDto
+        CreateMap<PhotoForCreationDto, Photo>(); // bidejki Samo sto gi kreirav mora podatocive od PhotoForCreationDto da im dadam pravec do Photo Modelot
 
         }
         

@@ -23,7 +23,7 @@ export class MemberDetailComponent implements OnInit {
 
   ngOnInit() {
     this.route.data.subscribe((data) => {
-      this.user = data['user']; // ovoj user e od routes.ts pod /members/:id // 93
+      this.user = data['user']; // ovoj user e od routes.ts pod /members/:id // 93// *
     });
 
     // tuka nadole e za Gallery 94
@@ -47,9 +47,9 @@ export class MemberDetailComponent implements OnInit {
 
   getImages() {
     const imageUrls = [];
-    for (const photo of this.user.photos) {
+    for (const photo of this.user.photos) { // * //  this.user e zemen od DB preku resolverot so pomos na {{id}} vo URL
 
-      imageUrls.push({
+      imageUrls.push({ // ova e samo za Display golemite i malite sliki so ke gi pokazuva html galeryto od ngx
 
         small: photo.url,
         medium: photo.url,

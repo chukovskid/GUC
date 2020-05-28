@@ -20,8 +20,8 @@ export class MemberDetailResolver implements Resolve<User> {
   ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<User> {
-    return this.userService.getUser(route.params['id']).pipe(
-        // .pipe i se natamu e za errors ..   // getUser ne treba subscribe poso ima samoto
+    return this.userService.getUser(route.params['id']) // do tuka e samo da go  najde USEROT so toa ID .. metodov ide u edit-details (pred da pomine niz routes.ts)
+    .pipe(   // .pipe i se natamu e za errors ..   // getUser ne treba subscribe poso ima samoto
         catchError((error) => {
           this.alertify.error('Problem in retriving data');
           this.router.navigate(['/members']);

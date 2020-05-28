@@ -13,7 +13,7 @@
 
     <div class="col col-sm-4">
       <div class="card">
-        <img src="{{user.photoUrl}}" alt="{{user.knownAs}}" class="card-img-top img-thumbnail">
+        <img src="{{photoUrl}}" alt="{{user.knownAs}}" class="card-img-top img-thumbnail">
         <div class="card-body">
             <strong>Location:</strong>
             <p>{{user.city}}, {{user.country}}</p>
@@ -61,8 +61,9 @@
       </form>
       </tab>
       <tab heading="Edit Photos">
-        <h4>Photo Edit will go here</h4>
-        <p>  {{user.interests}}    </p>
+        <app-photo-editor [photos]="user.photos" (getMemberPhotoChange)="updateMainPhoto($event)" ></app-photo-editor>
+        <!-- 116 stamav [] za Instantno menuvanje na profilnata pri btn-MAIN -->
+        <!-- 110 -->
       </tab>
    
     </tabset>

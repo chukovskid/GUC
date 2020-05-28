@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.dtos;
 using DatingApp.API.Models;
@@ -19,8 +20,10 @@ namespace DatingApp.API.Controllers
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config; // go koristam za AppSetings da menuvam/ se koristi dole kaj Login Token
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        private readonly IMapper _mapper;
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
         {
+            _mapper = mapper; // 117
             _config = config;
             _repo = repo;
         }// constructor. pravam instanca so _repo. a repo ke go dobijam koga ke ja vikaat classava
@@ -48,7 +51,7 @@ namespace DatingApp.API.Controllers
 
 
         // LOGIN 
-        [HttpPost("login")]       
+        [HttpPost("login")]
         public async Task<ActionResult> Login(UserForLoginDto userForLoginDto)
         {
             // var userFrom Repo ke mi bide gotov model vraten od repo preku login 
@@ -72,7 +75,8 @@ namespace DatingApp.API.Controllers
             //  credentials za SIGN IN (login)
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);// key: e security key, algoritmot: go koristime za hash
 
-            var tokenDescriptor= new SecurityTokenDescriptor{
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(1), // do koga da trae
                 SigningCredentials = creds // 3-35.13:00 klucot i algoritamot
@@ -82,12 +86,16 @@ namespace DatingApp.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor); // tokenHandler e JwtSecurityTokenHandler()
 
-            
-            return Ok(new {
-                token = tokenHandler.WriteToken(token) // ovoj token go vrakjame na Klientot// bezz tokenHandler nema da go cita, baska ne postoi writeToken() samo
+            var user = _mapper.Map<UserForListDto>(userFromRepo); // go koristam UserForListDto poso e najmalo dro d user i ima PhotoURL// 117
+
+
+            return Ok(new
+            {
+                token = tokenHandler.WriteToken(token), // ovoj token go vrakjame na Klientot// bezz tokenHandler nema da go cita, baska ne postoi writeToken() samo
+                user // 117
             });
 
-      
+
         }
 
 

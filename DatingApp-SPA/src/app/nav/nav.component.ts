@@ -10,10 +10,12 @@ import { Router } from '@angular/router';
 })
 export class NavComponent implements OnInit {
   model: any = { }; // ova ke gi cuva username i pass
+  photoUrl: string; // nova promenliva kade ke cuvam photo od mainPhotoUlr
 
   constructor(public authService: AuthService, private alrtify: AlertifyService, private router: Router) { }
 
   ngOnInit() {
+    this.authService.currentPhotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl); // od auth ja zimam za da ja nosam vo Nav 118
   }
 
   login(){
@@ -35,6 +37,9 @@ logedin(){
 
 logeout(){
 localStorage.removeItem('token');
+localStorage.removeItem('user');
+this.authService.decodedToken = null;
+this.authService.currentUser = null;
 this.alrtify.message('Logged out');
 this.router.navigate(['/home']);
 

@@ -44,6 +44,7 @@ namespace DatingApp.API
                 Newtonsoft.Json.ReferenceLoopHandling.Ignore; // 76
             });
             services.AddCors(); // ova go stavam za localhost:5000 da ne go cita kako virus ili hak. ti pisit na googleChrome
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings")); // so ova vrednostite od ClaudnarySetings.cs ke bidat isto so fajlovite u appSettings.json file
             services.AddAutoMapper(typeof(DatingRepository).Assembly); // DatingRepository e dodadena kako Klasakoja ke go KORISTI AutoMapper
             services.AddScoped<IAuthRepository, AuthRepository>(); // kazuvam deka Interfaceot ke zima od OVOJ Repository.
             services.AddScoped<IDatingRepository, DatingRepository>(); // 72
@@ -94,7 +95,7 @@ namespace DatingApp.API
             app.UseRouting();
             
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()); // ova e sto dozvoluvame, koj bilo Metod i koj bilo Header
-
+                                                        // vo 112 spomnuvame deka ima problem co acces vo 5000 od 4200 poradi credentials. toa se resava ako dodademe AllowAnyCredential() ama ke dozvoli svasta
             app.UseAuthentication(); 
 
             app.UseAuthorization();

@@ -20,6 +20,7 @@ import { AuthService } from 'src/app/_services/auth.service';
 export class MemberEditComponent implements OnInit {
   @ViewChild('editForm') editForm: NgForm;
   user: User;
+  photoUrl: string;
   @HostListener('window:beforeunload', ['$event']) // 100 za pri gasenje na tab da javi alert za Unsaved
   unloadNotification($event: any) {
     if (this.editForm.dirty) {
@@ -37,6 +38,9 @@ export class MemberEditComponent implements OnInit {
   ngOnInit() {
     this.route.data.subscribe((data) => {
       this.user = data['user'];
+
+      this.authService.currentPhotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl); // od auth ja zimam za da ja nosam vo Edit // 118
+
     });
   }
 
@@ -50,4 +54,11 @@ export class MemberEditComponent implements OnInit {
         this.alertify.error(error);
       });
   } //  99 finta ima vo htmlot bidejki formata sto ja koristi funkcijava ne e u nejze submit buttonot / otvori vidi
+
+
+  updateMainPhoto(photoUrl){
+    this.user.photoUrl = photoUrl;
+  }
+
+
 }
