@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DatingApp.API.Controllers
 {
+    
     [Route("api/[controller]")] // bidejki ovde imam pisano "api/" bara da imame api/ vo linkot a za [Controller] e smeneto so AUTH!!! bitno
     [ApiController]
     public class AuthController : ControllerBase
@@ -38,13 +39,13 @@ namespace DatingApp.API.Controllers
             if (await _repo.UserExists(userForRegisterDto.Username))// ako ne postoi pravi go ova!!
                 return BadRequest("Username already exists"); // za BadRequest() mi treba : ControllerBase
 
-            User userToCreate = new User
-            { // napravi nov User
-                Username = userForRegisterDto.Username // go zacuvuvam usernamot vo nov objekt user
-            };
+            var userToCreate = _mapper.Map<User>(userForRegisterDto); // Dobieniot userForRegisterDto go Mapnuvam so User
+           
             var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password); // register ti e gotovo polno User so username, passHash i passSalt bez ID
+           
+            var userToReturn = _mapper.Map<UserForDetailedDto>(createdUser); // ke vratime od tip UserForDetailedDto a vrednostite se od createdUser
 
-            return StatusCode(201); // CreatedAtRoute( posle ke go sredime) bidejki nemame User od db kako sto sfativ
+            return CreatedAtRoute("GetUser", new {Controller = "Users", id = createdUser.Id}, userToReturn); // CreatedAtRoute( posle ke go sredime) bidejki nemame User od db kako sto sfativ
         }
 
 

@@ -48,8 +48,8 @@ logedin(){
 }
 
 
-register(model: any){ // so ovoj metod prakjam model vo POST na linkot register i si se pravi nov user, voala
-  return this.http.post(this.baseUrl + 'register', model); // bidejki ne vrakjame nisto so register mn e pokratok od LOGIN
+register(user: User){ // so ovoj metod prakjam model vo POST na linkot register i si se pravi nov user, voala
+  return this.http.post(this.baseUrl + 'register', user); // bidejki ne vrakjame nisto so register mn e pokratok od LOGIN
 }
 
 }

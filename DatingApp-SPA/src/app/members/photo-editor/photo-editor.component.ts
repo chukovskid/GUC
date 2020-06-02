@@ -60,6 +60,12 @@ export class PhotoEditorComponent implements OnInit {
         };
         this.photos.push(photo); // bidejki pravam push i racno ja dodavam slikava neli pri reload treba
         // uste edna da se dodade? Dime razmisli go ova
+        if (photo.isMain){
+        this.authService.changeMemberPhoto(photo.url); // changeMemberPhoto menuva na nav, u cards i details Main PHOTO // 133
+        this.authService.currentUser.photoUrl = photo.url; // ovaa promenliva e samo za da ja iskoristam kako overide na localStorage user
+        localStorage.setItem('user', JSON.stringify(this.authService.currentUser)); // 133
+
+        }
       }
     };
   }

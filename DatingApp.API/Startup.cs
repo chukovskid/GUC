@@ -48,6 +48,8 @@ namespace DatingApp.API
             services.AddAutoMapper(typeof(DatingRepository).Assembly); // DatingRepository e dodadena kako Klasakoja ke go KORISTI AutoMapper
             services.AddScoped<IAuthRepository, AuthRepository>(); // kazuvam deka Interfaceot ke zima od OVOJ Repository.
             services.AddScoped<IDatingRepository, DatingRepository>(); // 72
+            services.AddScoped<LastUserActivity>(); // 137
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options => {
                  options.TokenValidationParameters = new TokenValidationParameters
