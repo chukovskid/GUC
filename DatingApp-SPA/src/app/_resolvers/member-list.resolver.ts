@@ -13,6 +13,9 @@ import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class MemberListResolver implements Resolve<User[]> { // 93
+pageNumber = 1;
+pageSize = 5; // novi vrednosti porzlicni od tie na API (=10)
+
   constructor(
     private userService: UserService,
     private router: Router,  /// ne stavas ActivatedRouter
@@ -20,7 +23,7 @@ export class MemberListResolver implements Resolve<User[]> { // 93
   ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<User[]> {
-    return this.userService.getUsers().pipe(
+    return this.userService.getUsers(this.pageNumber, this.pageSize).pipe(
         // .pipe i se natamu e za errors ..   // getUser ne treba subscribe poso ima samoto
         catchError((error) => {
           this.alertify.error('Problem in retriving data');
