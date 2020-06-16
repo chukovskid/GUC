@@ -50,7 +50,7 @@ resetFilters(){ // 147
 
 }
   loadUsers(){
-s    this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, this.userParams)
+   this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, this.userParams)
     .subscribe((res: PaginatedResult<User[]>) => { // getUsers() vo user.service go vrakja PaginatedResult od subscribe
       this.users = res.result; // postavuvam deka  ovoj users da gi zeme vrednostite od subscribe.users
       this.pagination = res.pagination;
