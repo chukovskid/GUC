@@ -6,6 +6,7 @@ using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.dtos;
 using DatingApp.API.Helpers;
+using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -77,6 +78,38 @@ namespace DatingApp.API.Controllers
             throw new Exception($"Updating used {id} filed to save");
 
 
+        }
+
+        [HttpPost("{id}/like/{recipientId}")] // Ke Followneme nekoj
+        public async Task<IActionResult> LikeUser(int id, int recipientId)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            return Unauthorized(); // principov cesto ke bide koristen bidejki ke proveruvam koe ID e logiran
+
+            var like = await _repo.GetLike(id, recipientId);
+
+            if(like != null){
+                return BadRequest("You have already liked this user");
+            } // Dali postoi Lajkov
+
+            if(await _repo.GetUser(recipientId) == null){
+             return NotFound();
+            } // Dali Postoi Recipientot
+
+                // ako se e dobro napravi mi nov Like
+                like = new Like
+                {
+                    LikerId = id,
+                    LikeeId = recipientId
+                };
+
+            _repo.Add<Like>(like); // i Dodadi go vo lista Sinhrono
+
+            if(await _repo.SaveAll()){
+             return Ok();
+            }
+
+            return BadRequest("Failed to Like the user");
         }
     }
 }
