@@ -30,15 +30,13 @@ namespace DatingApp.API.Controllers
         [HttpGet] // api/users
         public async Task<IActionResult> GetUsers([FromQuery] UserParams userParams)
         {
-            // Informaciite od Header za Id i Gender gi dodavam vo UserParams za vo DatingRepo da mozam da isfilrtiram
-
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value); // go zimam ID od User.Claims
             userParams.UserId = currentUserId;
 
-            var userFromRepo = await _repo.GetUser(currentUserId); // go zimam userov da vidam dali ima Gender staveno
+            var userFromRepo = await _repo.GetUser(currentUserId); 
 
             if (string.IsNullOrEmpty(userParams.Gender))
-            { // ako NEMA preferenca sakame da go stavime LOGICNO SPROTIVNO OD TOA STO E
+            { // ako NEMA preferenca sakame da go stavime LOGICNO SPROTIVNO OD TOA
                 userParams.Gender = userFromRepo.Gender == "male" ? "female" : "male";
             }
 
@@ -58,7 +56,7 @@ namespace DatingApp.API.Controllers
         {
             var user = await _repo.GetUser(id);
 
-            var userToReturn = _mapper.Map<UserForDetailedDto>(user); // _mapper go koritsam za da fo isfiltrira pretpostavuvam
+            var userToReturn = _mapper.Map<UserForDetailedDto>(user);
             return Ok(userToReturn);
 
         }
@@ -67,7 +65,7 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdate)
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-                return Unauthorized(); // principov cesto ke bide koristen bidejki ke proveruvam koe ID e logiran
+                return Unauthorized(); 
 
             var userFromRepo = await _repo.GetUser(id);
             _mapper.Map(userForUpdate, userFromRepo); // Rabotite od userForUpdate STAVI GI VO userFromRepo
@@ -84,18 +82,17 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> LikeUser(int id, int recipientId)
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-            return Unauthorized(); // principov cesto ke bide koristen bidejki ke proveruvam koe ID e logiran
+            return Unauthorized(); 
 
             var like = await _repo.GetLike(id, recipientId);
 
             if(like != null){
                 return BadRequest("You have already liked this user");
-            } // Dali postoi Lajkov
+            }
 
             if(await _repo.GetUser(recipientId) == null){
              return NotFound();
-            } // Dali Postoi Recipientot
-
+            } 
                 // ako se e dobro napravi mi nov Like
                 like = new Like
                 {

@@ -107,11 +107,10 @@ namespace DatingApp.API.Controllers
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
-            // prati gi parametrive vo repo.GetThread i listata sto ke ja vrati treba da e od threadot
 
             var messageThreadFromRepo = await _repo.GetMessageThread(userId, recipientId);
 
-            var messagesToReturn = _mapper.Map<IEnumerable<MessageForReturnDto>>(messageThreadFromRepo); // Lista vrakjas, IEnumerable
+            var messagesToReturn = _mapper.Map<IEnumerable<MessageForReturnDto>>(messageThreadFromRepo); 
 
 
             return Ok(messagesToReturn);

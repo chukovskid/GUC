@@ -31,7 +31,7 @@ namespace DatingApp.API.Controllers
             _mapper = mapper;
             _repo = repo;
 
-            Account acc = new Account( // zoso pravam nov  ?
+            Account acc = new Account( 
             _cloudinaryConfig.Value.CloudName,
             _cloudinaryConfig.Value.ApiKey,
             _cloudinaryConfig.Value.ApiSecret
@@ -42,16 +42,13 @@ namespace DatingApp.API.Controllers
         }
 
 
-        [HttpPost("{id}", Name = "GetPhoto")] // 108
+        [HttpPost("{id}", Name = "GetPhoto")]
         public async Task<IActionResult> GetPhoto(int id)
         {
 
             var photoFromRepo = await _repo.GetPhoto(id);
-            // nesto nejkeme celo photo so site podatoci d go vratime
-            // sakame izgleda ednostavno photo da vratime, dto ke se prai izgleda
 
-            // nonovo PhotoForReturnDto ima informacija + PublicId     toa ke ti vrati Cloudinary
-            var photo = _mapper.Map<PhotoForReturnDto>(photoFromRepo); // podatocite od PhotoForReturnDto imaat Mapa da stignat do Podatocite od photoFromRepo
+            var photo = _mapper.Map<PhotoForReturnDto>(photoFromRepo);
 
             return Ok(photo);
         }
@@ -63,7 +60,7 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> AddPhotoForUser(int userId, [FromForm] PhotoForCreationDto photoForCreationDto)
         { // 107
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-                return Unauthorized(); // principov cesto ke bide koristen bidejki ke proveruvam koe ID e logiran
+                return Unauthorized();
             var userFromRepo = await _repo.GetUser(userId);
 
 
@@ -89,19 +86,19 @@ namespace DatingApp.API.Controllers
             photoForCreationDto.Url = uploadResult.Uri.ToString();
             photoForCreationDto.PublicId = uploadResult.PublicId;
 
-            var photo = _mapper.Map<Photo>(photoForCreationDto); // gi stavam info. of photoForCreationDto u Photo novive informacii(parametri)
+            var photo = _mapper.Map<Photo>(photoForCreationDto); 
 
             if (!userFromRepo.Photos.Any(u => u.IsMain))
-            { // ako userov NEMA sliki togas ke ja stavime prvata slika kako PROFILNA
+            { 
                 photo.IsMain = true; // prvava slika ke bide Profilna
             }
 
-            userFromRepo.Photos.Add(photo); // MNOGU BITEM MOMENT // stavam photo u repo
+            userFromRepo.Photos.Add(photo); 
 
             if (await _repo.SaveAll())
             {
                 var photoToReturn = _mapper.Map<PhotoForReturnDto>(photo);
-                return CreatedAtRoute("GetPhoto", new { userId = userId, id = photo.Id }, photoToReturn); /// Vrakja statis cod od http: 201 // 108
+                return CreatedAtRoute("GetPhoto", new { userId = userId, id = photo.Id }, photoToReturn); 
             }
 
             return BadRequest("Ne moze da se dodade slikata!");
@@ -114,13 +111,13 @@ namespace DatingApp.API.Controllers
         // api/users/{userId}/photos  /id/setMain
         [HttpPost("{id}/setMain")]
         public async Task<IActionResult> SetMainPhoto(int userId, int id)
-        { // 113
+        { 
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-                return Unauthorized(); // principov cesto ke bide koristen bidejki ke proveruvam koe ID e logiran
+                return Unauthorized(); 
             var user = await _repo.GetUser(userId);
 
             if (!user.Photos.Any(p => p.Id == id))
-                return Unauthorized(); // ako nema slika so toa Id vrati Unauthorized
+                return Unauthorized(); 
 
             var photoFromRepo = await _repo.GetPhoto(id);
 
@@ -145,10 +142,10 @@ namespace DatingApp.API.Controllers
         { // 113
 
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-                return Unauthorized(); // principov cesto ke bide koristen bidejki ke proveruvam koe ID e logiran
+                return Unauthorized(); 
             var user = await _repo.GetUser(userId);
             if (!user.Photos.Any(p => p.Id == id))
-                return Unauthorized(); // ako nema slika so toa Id vrati Unauthorized
+                return Unauthorized(); 
             var photoFromRepo = await _repo.GetPhoto(id);
 
             if (photoFromRepo.IsMain)
@@ -157,8 +154,8 @@ namespace DatingApp.API.Controllers
             if (photoFromRepo.PhotoId != null)
             { // ako voopsto postoi slikava, brisi i od Cloudinary
 
-                var deleteParams = new DeletionParams(photoFromRepo.PhotoId); // ova ke vrati objekt {resulet => ok} zata ke go socuvam i proveram
-                var result = _cloudinary.Destroy(deleteParams); // ova od stranata na Cloudinary go najdov // 120
+                var deleteParams = new DeletionParams(photoFromRepo.PhotoId); 
+                var result = _cloudinary.Destroy(deleteParams); 
 
                 if (result.Result == "ok")
                 {
@@ -167,7 +164,7 @@ namespace DatingApp.API.Controllers
             }
 
             if (photoFromRepo.PhotoId == null)
-            { // a ako Ne postoi brisi od Repo, so ke ti e 
+            { // a ako Ne postoi brisi od Repo
                 _repo.Delete(photoFromRepo);
             }
 

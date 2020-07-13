@@ -15,37 +15,36 @@ using Microsoft.IdentityModel.Tokens;
 namespace DatingApp.API.Controllers
 {
     
-    [Route("api/[controller]")] // bidejki ovde imam pisano "api/" bara da imame api/ vo linkot a za [Controller] e smeneto so AUTH!!! bitno
+    [Route("api/[controller]")] 
     [ApiController]
     public class AuthController : ControllerBase
     {
         private readonly IAuthRepository _repo;
-        private readonly IConfiguration _config; // go koristam za AppSetings da menuvam/ se koristi dole kaj Login Token
+        private readonly IConfiguration _config; // go koristam za AppSetings da menuvam/ se koristi  Login Token
         private readonly IMapper _mapper;
         public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
         {
             _mapper = mapper; // 117
             _config = config;
             _repo = repo;
-        }// constructor. pravam instanca so _repo. a repo ke go dobijam koga ke ja vikaat classava
+        }
 
 
         [HttpPost("register")]
         public async Task<ActionResult> Register(UserForRegisterDto userForRegisterDto)
-        {  //JSON: ovie vrednosti za username i passsword gi dobivam kako  JSON file odgovoren e [ApiControler]
-           // validate request // staviv ModelDto poradi toa sto nego go cita i avtomatski pretvara od JSON
+        {  
             userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
 
-            if (await _repo.UserExists(userForRegisterDto.Username))// ako ne postoi pravi go ova!!
-                return BadRequest("Username already exists"); // za BadRequest() mi treba : ControllerBase
+            if (await _repo.UserExists(userForRegisterDto.Username))
+                return BadRequest("Username already exists"); 
 
-            var userToCreate = _mapper.Map<User>(userForRegisterDto); // Dobieniot userForRegisterDto go Mapnuvam so User
+            var userToCreate = _mapper.Map<User>(userForRegisterDto);
            
-            var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password); // register ti e gotovo polno User so username, passHash i passSalt bez ID
+            var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password); 
            
-            var userToReturn = _mapper.Map<UserForDetailedDto>(createdUser); // ke vratime od tip UserForDetailedDto a vrednostite se od createdUser
+            var userToReturn = _mapper.Map<UserForDetailedDto>(createdUser); 
 
-            return CreatedAtRoute("GetUser", new {Controller = "Users", id = createdUser.Id}, userToReturn); // CreatedAtRoute( posle ke go sredime) bidejki nemame User od db kako sto sfativ
+            return CreatedAtRoute("GetUser", new {Controller = "Users", id = createdUser.Id}, userToReturn); 
         }
 
 
@@ -55,21 +54,16 @@ namespace DatingApp.API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> Login(UserForLoginDto userForLoginDto)
         {
-            // var userFrom Repo ke mi bide gotov model vraten od repo preku login 
             var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
-            // sega imam dobien model, User koj moze e praen(null) ako e takov login ke mi return null;
             if (userFromRepo == null)
                 return Unauthorized(); // ke vrati deka ne sto e gresno, user ili pass
-
             var claims = new[] { // pravime Token koj ke go vratime na User
                 new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
                 new Claim(ClaimTypes.Name, userFromRepo.Username)
             }; // go vrakjame ova za da ne ide do DB da vlece info
 
 
-            //
             // sega ni treba kluc za da go vrati Tokenot
-
             var key = new SymmetricSecurityKey(Encoding.UTF8
                 .GetBytes(_config.GetSection("AppSettings:Token").Value)); // ide vo appsettings.json i go bara AppSetings:token vo koj imam Kluc
 
@@ -87,7 +81,7 @@ namespace DatingApp.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor); // tokenHandler e JwtSecurityTokenHandler()
 
-            var user = _mapper.Map<UserForListDto>(userFromRepo); // go koristam UserForListDto poso e najmalo dro d user i ima PhotoURL// 117
+            var user = _mapper.Map<UserForListDto>(userFromRepo); // go koristam UserForListDto bidejki e najmalo dto od user i ima PhotoURL// 117
 
 
             return Ok(new

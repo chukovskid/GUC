@@ -47,19 +47,16 @@ namespace DatingApp.API.Data
             users = users.OrderByDescending(u => u.LastActive).AsQueryable();
 
             users = users.Where(u => u.Gender == userParams.Gender); // gi Trgam site site od ist Pol (ostanuvaat site so Razlicen)// 145// 
-            users = users.Where(u => u.Id != userParams.UserId); // i da ne go dava LOGIRANIOT USER
-                                                                 // dodavam filtriranje spored AGE
-                                                                 // napravi max i min promenlivi i ako e pogolemo ili pomalo od dadenite 
-
+            users = users.Where(u => u.Id != userParams.UserId);
 
             if (userParams.Likers)
             {
                 var userLikees = await GerUserLikes(userParams.UserId, userParams.Likers); // so ova gi imam site sto ME lajknale(lista od nivnite ID)
-                users = users.Where(u => userLikees.Contains(u.Id));  /// zemi gi USERITE so pomos na nivnite Ids
+                users = users.Where(u => userLikees.Contains(u.Id));
             }
             if (userParams.Likees)
             { // zavisno koe e True od dvete
-                var userLikers = await GerUserLikes(userParams.UserId, userParams.Likers); // SUM GI Lajknal (lista od nivnite ID)
+                var userLikers = await GerUserLikes(userParams.UserId, userParams.Likers);
                 users = users.Where(u => userLikers.Contains(u.Id));  /// zemi gi USERITE so pomos na nivnite Ids
             }
 
@@ -82,10 +79,6 @@ namespace DatingApp.API.Data
                         break;
                 }
             }
-
-
-
-            // sakam da mi vrati: useri izretceni od fukcijata vo PagedList.CreateAsync
             return await PagedList<User>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
         }
 
@@ -96,7 +89,6 @@ namespace DatingApp.API.Data
             .Include(l => l.Likees)
             .FirstOrDefaultAsync(u => u.Id == id);
 
-            // ako Likers = true gi saka site koi go sledat
             if (likers)
             {
                 // site Likers vo Userot koi imaat lajknato user so moe ID. daj mi go nivniot Id
@@ -104,7 +96,6 @@ namespace DatingApp.API.Data
             }
             else
             {
-                // site Likers vo Userot koi imaat lajknato user so moe ID. daj mi go nivniot Id
                 return user.Likees.Where(u => u.LikerId == id).Select(i => i.LikeeId);
             }
 
@@ -163,10 +154,7 @@ namespace DatingApp.API.Data
 
         public async Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId)
         {
-            // zemi gi site messages, 
-            // filtriraj gi samo tie kade sto recipient e recipient i sender e sender
-
-            var messages = await _context.Messages
+             var messages = await _context.Messages
             .Include(s => s.Sender).ThenInclude(p => p.Photos)
             .Include(r => r.Recipient).ThenInclude(p => p.Photos)
             .Where(s => s.SenderId == userId && s.SenderDeleted == false && s.RecipientId == recipientId
