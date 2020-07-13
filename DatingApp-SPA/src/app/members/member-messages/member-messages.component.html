@@ -1,0 +1,50 @@
+<div class="card">
+  <div class="card-body scroll-to-bottom"  #scroll>
+    <ul class="">
+      <li *ngFor="let message of messages.reverse()" class="mb-3"  >
+        <!-- to me -->
+        <div *ngIf="message.senderId == recipientId">
+          <div class="incoming_msg">
+            <div class="incoming_msg_img"> <img src="{{message.senderPhotoUrl}}" alt="sunil"> </div>
+            <div class="received_msg">
+              <div class="received_withd_msg">
+                <p>{{message.content}}</p>
+                <span class="time_date " > {{message.messageSent | timeago}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- to them -->
+        <div *ngIf="message.senderId != recipientId">
+          <div class="outgoing_msg">
+            <div class="sent_msg">
+              <p>{{message.content}}
+                <small class="float-right">
+                  <span *ngIf="!message.isRead" class="text-danger fas fa-eye-slash"></span>
+                  <span *ngIf="message.isRead" class="text-success">{{message.dateRead | timeago}}</span>
+                </small>
+              </p>
+              <span class="time_date"> {{message.messageSent | timeago}}</span>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="type_msg pa-1">
+    <!-- messageForm.valid && -->
+    <form #messageForm="ngForm" (ngSubmit)="messageForm.valid && sendMessage()">
+      <div class="input_msg_write">
+        <input type="text"
+         [(ngModel)]="newMessage.content"
+          name="content"
+           required
+            class="write_msg"
+          placeholder="Type a message" />
+        <button class="msg_send_btn"
+        [disabled]="!messageForm.valid "
+         type="submit"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+      </div>
+    </form>
+  </div>
+</div>

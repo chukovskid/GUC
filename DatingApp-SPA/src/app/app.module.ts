@@ -42,6 +42,9 @@ import { MemberEditResolver } from './_resolvers/member-edit.resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { ListsResolver } from './_resolvers/lists.resolver';
+import { MessagesResolver } from './_resolvers/messages.resolver';
+import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
+
 
 export function tokenGetter() {
    return localStorage.getItem('token'); // 89
@@ -59,6 +62,7 @@ export function tokenGetter() {
       MemberCardComponent,
       MemberDetailComponent,
       MemberEditComponent,
+      MemberMessagesComponent,
       PhotoEditorComponent
    ],
    imports: [
@@ -74,7 +78,7 @@ export function tokenGetter() {
       BsDropdownModule.forRoot(),
       ButtonsModule.forRoot(), // 149
       TabsModule.forRoot(),
-      TimeagoModule.forRoot(), // 136
+      TimeagoModule.forRoot(),  // 136
       NgxGalleryModule, // 94
       RouterModule.forRoot(appRoutes),
       JwtModule.forRoot({
@@ -97,6 +101,7 @@ export function tokenGetter() {
       MemberListResolver,
       MemberEditResolver,
       ListsResolver,
+      MessagesResolver,
 
    ],
    bootstrap: [

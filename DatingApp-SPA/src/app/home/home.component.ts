@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
   }
 
-  registerToggle(){ // so ova VLAGAME u REGISTER MODE (true)
+  registerToggle(){ // so ova VLAGAME vo REGISTER MODE (true)
     this.registerMode = true; // poso e toggle ke vrti pomegu true i false na register mode
   }
 
@@ -23,7 +23,6 @@ export class HomeComponent implements OnInit {
 
 cancelRegisterMode(registerMode: boolean){
   this.registerMode = registerMode;
-// mn zaebano sea ke ti objasnam... ova regisrerMode: boolean ZIMA vrednost true ili false od home.HTML ($event) a toa stanuva true od register.ts cancelRegister
 }
 
 }

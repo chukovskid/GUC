@@ -12,6 +12,7 @@ namespace DatingApp.API.Data
         public DbSet<User>  User { get; set; } // posle ova moras Migrations da ne zaboravis, vazi za site
         public DbSet<Photo> Photos {get; set;}
         public DbSet<Like> Likes {get; set;} // 153
+        public DbSet<Message> Messages {get; set;} // 153
 
 
 
@@ -35,6 +36,20 @@ namespace DatingApp.API.Data
                 .WithMany(u => u.Likees)
                 .HasForeignKey(u => u.LikerId)
                 .OnDelete(DeleteBehavior.Restrict); 
+
+
+            // MESSAGES
+            builder.Entity<Message> () // one to many + one to many = many to many // vo Core momentalno e Edinstven nacin 
+                .HasOne(u => u.Sender) // Message.Sender   
+                .WithMany(m => m.MessagesSent) // .withMany (Message.Sender.MessagesSent[])
+                .OnDelete(DeleteBehavior.Restrict); // za da ne go brise i Userot
+
+             builder.Entity<Message> () // one to many + one to many = many to many // vo Core momentalno e Edinstven nacin 
+                .HasOne(u => u.Recipient) // Message.Recipient 
+                .WithMany(m => m.MessagesReceived) // .withMany (Message.Sender.MessagesReceived[])
+                .OnDelete(DeleteBehavior.Restrict); // za da ne go brise i Userot
+
+
          } // migriraj! za da se pojavi tabelata
 
         

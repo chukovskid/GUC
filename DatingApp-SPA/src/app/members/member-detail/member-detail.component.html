@@ -23,14 +23,14 @@
       </div>
       <div class="card-footer">
         <button class="btn btn-primary">Like</button>
-        <button class="btn btn-success">Message</button>
+        <button class="btn btn-success"(click)="selectTab(3)">Message</button>
 
       </div>
     </div>
     <!-- 92 tabs and more info in Details -->
 <div class="col-sm-8">
   <div class="tab-panel">
-    <tabset>
+    <tabset #memberTabs>
       <tab heading="About {{user.knownAs}}">
         <h4>Description</h4>
         <p>  {{user.introduction}}    </p>
@@ -46,7 +46,7 @@
         <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
       </tab>
       <tab heading="Messages">
-        <h4>Messages will go here</h4>
+        <app-member-messages [recipientId]="user.id"></app-member-messages>
       </tab>
     </tabset>
   </div>
