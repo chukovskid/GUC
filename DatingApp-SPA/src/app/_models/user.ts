@@ -1,8 +1,9 @@
 import { Photo } from './photo';
+import { NotificationUser } from './notificationUser';
 
 export interface User { // 83
 id: number;
-username: string;
+userName: string;
 knownAs: string;
 age: number;
 gender: string;
@@ -15,4 +16,6 @@ interests?: string;
 introduction?: string;
 lookingFor?: string;
 photos?: Photo[]; // povrzano so photo.ts interface
+roomId: number;
+notificationUser: NotificationUser[];
 }

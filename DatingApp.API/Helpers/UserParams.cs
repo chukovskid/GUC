@@ -19,6 +19,7 @@ namespace DatingApp.API.Helpers
         public string  orderBy { get; set; }
         public bool Likees { get; set; } = false;
         public bool Likers { get; set; } =false;
+        public string Search { get; set; }
         
     }
 }

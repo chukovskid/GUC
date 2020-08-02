@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace DatingApp.API.Controllers
 {
     [ServiceFilter(typeof(LastUserActivity))]
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -25,6 +24,15 @@ namespace DatingApp.API.Controllers
         {
             _mapper = mapper;
             _repo = repo;
+        }
+
+         [HttpGet("full")] // api/users
+        public async Task<IActionResult> GetFullUsers([FromQuery] UserParams userParams)
+        {
+
+            var users = await _repo.GetFullUsers();
+
+            return Ok(users);
         }
 
         [HttpGet] // api/users

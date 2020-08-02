@@ -1,0 +1,8 @@
+.notifications{
+border: 1px, solid, wheat;
+margin-top: 3%;
+}
+.notification{
+cursor: -webkit-grab; cursor: grab;
+
+}

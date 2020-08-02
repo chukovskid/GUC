@@ -1,11 +1,16 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
-import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormBuilder,
+} from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker/public_api';
 import { User } from '../_models/user';
 import { __assign } from 'tslib';
-import {  Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -26,28 +31,34 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.bsConfig = {
-    containerClass: 'theme-dark-blue'
-    },
-    this.createRegisterForm();
+    (this.bsConfig = {
+      containerClass: 'theme-dark-blue',
+    }),
+      this.createRegisterForm();
   }
 
-createRegisterForm(){
-  this.registerForm = this.fb.group({
-    gender: ['male'],
-    username: ['', Validators.required],
-    knownAs: ['', Validators.required],
-    dateOfBirth: [null, Validators.required],
-    city: ['', Validators.required],
-    country: ['', Validators.required],
-    password: ['', [
-      Validators.required,
-      Validators.maxLength(14),
-      Validators.minLength(3)
-    ]], // 127
-    confirmPassword: ['', Validators.required],
-  }, {validator: this.passwordMatchValidator});
-}
+  createRegisterForm() {
+    this.registerForm = this.fb.group(
+      {
+        gender: ['male'],
+        username: ['', Validators.required],
+        knownAs: ['', Validators.required],
+        dateOfBirth: [null, Validators.required],
+        city: ['', Validators.required],
+        country: ['', Validators.required],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.maxLength(14),
+            Validators.minLength(3),
+          ],
+        ], // 127
+        confirmPassword: ['', Validators.required],
+      },
+      { validator: this.passwordMatchValidator }
+    );
+  }
 
   passwordMatchValidator(g: FormGroup) {
     return g.get('password').value === g.get('confirmPassword').value
@@ -57,17 +68,22 @@ createRegisterForm(){
 
   register() {
     // treba da gi zemam site vrednosti od spavo i da gi stavam vo api user
-    if (this.registerForm.valid){ //  ako e VALID // 132
-      this.user = Object.assign({}, this.registerForm.value); // Object.assign/ funkcionira taka sto vo {} ke vrati prazen bjekt napraven od  this.registerForm.value vrednosti. dobieniot { } objekt go stavam vo this.user
-      this.authService.register(this.user).subscribe(() => {
-        this.aletify.success('uspesno registriran');
-      }, error => {
-        this.aletify.error('The Register failed');
-      }, () => {
-        this.authService.login(this.user).subscribe(() => {
-          this.router.navigate(['/members']);
-        });
-      }); // Sto ke prai na On COMPLITE koga ke uspee registracijata
+    if (this.registerForm.valid) {
+      //  ako e VALID // 132
+      this.user = Object.assign({}, this.registerForm.value);
+      this.authService.register(this.user).subscribe(
+        () => {
+          this.aletify.success('uspesno registriran');
+        },
+        (error) => {
+          this.aletify.error('The Register failed');
+        },
+        () => {
+          this.authService.login(this.user).subscribe(() => {
+            this.router.navigate(['/members']);
+          });
+        }
+      ); // Sto ke prai na On COMPLITE koga ke uspee registracijata
     }
   }
   cancel() {

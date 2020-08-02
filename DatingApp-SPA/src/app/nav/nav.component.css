@@ -1,5 +1,9 @@
-
-
+.nav-link{
+    cursor: pointer;
+}
+i{
+    margin-right: 3px;
+}
 img{
     max-height: 40px;
     border: solid 2px white;

@@ -1,43 +1,70 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <div class="container">
 
- 
-  <a class="navbar-brand" href="#" [routerLink]="['/home']"  >Dating App</a>
- 
+
+    <a class="navbar-brand" href="#" [routerLink]="['/home']">GUC</a>
+
 
     <ul *ngIf="logedin()" class="navbar-nav mr-auto">
       <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" href="#" [routerLink]="['/members']">Matches</a>
+        <a class="nav-link" href="#" [routerLink]="['/members']">Students</a>
       </li>
-      <li class="nav-item"  routerLinkActive="active">
+      <li class="nav-item" routerLinkActive="active">
         <a class="nav-link" href="#" [routerLink]="['/lists']">Lists</a>
-      </li> 
-      <li class="nav-item"  routerLinkActive="active" >     
+      </li>
+      <li class="nav-item" routerLinkActive="active">
         <a class="nav-link " href="#" tabindex="-1" aria-disabled="true" [routerLink]="['/messages']">Messages</a>
       </li>
+  
+      <li  class="nav-item" routerLinkActive="active">
+        <a class="nav-link " href="#" tabindex="-1" aria-disabled="true" [routerLink]="['/rooms']">Rooms</a>
+      </li>
+      
+      <li  class="nav-item" routerLinkActive="active">
+        <a class="nav-link " href="#" tabindex="-1" aria-disabled="true" [routerLink]="['/notifications']">Notifications</a>
+      </li>
+<!-- 
+      <li *appHasRole="['Admin', 'Moderator']" class="nav-item" routerLinkActive="active">
+        <a class="nav-link " href="#" tabindex="-1" aria-disabled="true" [routerLink]="['/admin']">Admin</a>
+      </li> -->
+
+      <div class="dropdown nav-item" dropdown>
+        <a class="dropdown-toggle nav-link" dropdownToggle>
+          Admin
+        </a>
+        <div class="dropdown-menu mt-2" aria-labelledby="dropdownMenuButton" *dropdownMenu>
+          <a class="dropdown-item" [routerLink]="['notifications/register']"> <i class="fa fa-file"></i> New notification</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" [routerLink]="['/rooms/register']"> <i class="fa fa-bed"></i> Register a Room</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" [routerLink]="['/register']" href="#"> <i class="fa fa-user-plus"></i> Register a User</a>
+        </div>
+      </div>
 
     </ul>
 
-    <div  *ngIf="logedin()" class="dropdown" dropdown>
+    <div *ngIf="logedin()" class="dropdown" dropdown>
       <span>
-        <img src="{{photoUrl || '../../assets/user.png'}}" alt="" class="mr-1">
+        <img src="{{ photoUrl || '../../assets/user.png'}}" alt="" class="mr-1">
       </span>
-      <button class="btn btn-secondary dropdown-toggle" dropdownToggle >
+      <button class="btn btn-secondary dropdown-toggle" dropdownToggle>
         Welcome {{authService.decodedToken?.unique_name | titlecase}}
       </button>
-      <div class="dropdown-menu mt-2" aria-labelledby="dropdownMenuButton" *dropdownMenu >
-        <a class="dropdown-item" [routerLink]="['/member/edit']" > <i class="fa fa-user"></i> Edit</a>
+      <div class="dropdown-menu mt-2" aria-labelledby="dropdownMenuButton" *dropdownMenu>
+        <a class="dropdown-item" [routerLink]="['/member/edit']"> <i class="fa fa-user"></i> Edit</a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" (click)='logeout()' href="#">  <i class="fa fa-sign-out"></i> Logout</a>
+        <a class="dropdown-item" (click)='logeout()' href="#"> <i class="fa fa-sign-out"></i> Logout</a>
       </div>
     </div>
 
 
 
 
-    <form *ngIf="!logedin()" #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit) = "login()">
-      <input class="form-control mr-sm-2" type="text" name="username" placeholder="Username" required [(ngModel)]="model.username" >
-      <input class="form-control mr-sm-2" type="password" name="password" placeholder="Password" required [(ngModel)]="model.password" >
+    <form *ngIf="!logedin()" #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
+      <input class="form-control mr-sm-2" type="text" name="username" placeholder="Username" required
+        [(ngModel)]="model.username">
+      <input class="form-control mr-sm-2" type="password" name="password" placeholder="Password" required
+        [(ngModel)]="model.password">
       <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
     </form>
   </div>

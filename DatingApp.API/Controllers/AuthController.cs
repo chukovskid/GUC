@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -7,6 +8,8 @@ using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.dtos;
 using DatingApp.API.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -14,37 +17,44 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DatingApp.API.Controllers
 {
-    
-    [Route("api/[controller]")] 
+
+    [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthRepository _repo;
+        // private readonly IAuthRepository _repo;
         private readonly IConfiguration _config; // go koristam za AppSetings da menuvam/ se koristi  Login Token
         private readonly IMapper _mapper;
-        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        public AuthController( IConfiguration config, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager)
         {
+            _signInManager = signInManager; // 203
+            _userManager = userManager; // 203
             _mapper = mapper; // 117
             _config = config;
-            _repo = repo;
+            // _repo = repo;
         }
 
 
         [HttpPost("register")]
         public async Task<ActionResult> Register(UserForRegisterDto userForRegisterDto)
-        {  
-            userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
-
-            if (await _repo.UserExists(userForRegisterDto.Username))
-                return BadRequest("Username already exists"); 
-
+        {
             var userToCreate = _mapper.Map<User>(userForRegisterDto);
-           
-            var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password); 
-           
-            var userToReturn = _mapper.Map<UserForDetailedDto>(createdUser); 
 
-            return CreatedAtRoute("GetUser", new {Controller = "Users", id = createdUser.Id}, userToReturn); 
+            var result = await _userManager.CreateAsync(userToCreate, userForRegisterDto.Password); // 204
+
+            var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
+
+            if (result.Succeeded)
+            {
+             return CreatedAtRoute("GetUser", new { Controller = "Users", id = userToCreate.Id }, userToReturn);
+
+            }
+
+            return BadRequest(result.Errors);
+
         }
 
 
@@ -54,14 +64,37 @@ namespace DatingApp.API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> Login(UserForLoginDto userForLoginDto)
         {
-            var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
-            if (userFromRepo == null)
-                return Unauthorized(); // ke vrati deka ne sto e gresno, user ili pass
-            var claims = new[] { // pravime Token koj ke go vratime na User
-                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
-                new Claim(ClaimTypes.Name, userFromRepo.Username)
+            var user = await _userManager.FindByNameAsync(userForLoginDto.UserName); // koga ke vnese username da go najde userot
+            var result = await _signInManager.CheckPasswordSignInAsync(user, userForLoginDto.Password, false); // da proba SignIn
+
+            if (result.Succeeded)
+            {
+                var AppUser = _mapper.Map<UserForListDto>(user); // go koristam UserForListDto bidejki e najmalo dto od user i ima PhotoURL// 117
+
+                return Ok(new
+                {
+                    token = this.GenerateJwtToken(user).Result, // ovoj token go vrakjame na Klientot// bezz tokenHandler nema da go cita, baska ne postoi writeToken() samo
+                    user = AppUser // 117
+                });
+
+            }
+
+            return Unauthorized();
+        }
+
+        private async Task<string> GenerateJwtToken(User user)
+        { // 203
+            var claims = new List<Claim> { // pravime Token koj ke go vratime na User
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
             }; // go vrakjame ova za da ne ide do DB da vlece info
 
+            var roles = await _userManager.GetRolesAsync(user);
+
+            foreach (var role in roles)
+            {
+                 claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             // sega ni treba kluc za da go vrati Tokenot
             var key = new SymmetricSecurityKey(Encoding.UTF8
@@ -81,16 +114,7 @@ namespace DatingApp.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor); // tokenHandler e JwtSecurityTokenHandler()
 
-            var user = _mapper.Map<UserForListDto>(userFromRepo); // go koristam UserForListDto bidejki e najmalo dto od user i ima PhotoURL// 117
-
-
-            return Ok(new
-            {
-                token = tokenHandler.WriteToken(token), // ovoj token go vrakjame na Klientot// bezz tokenHandler nema da go cita, baska ne postoi writeToken() samo
-                user // 117
-            });
-
-
+            return tokenHandler.WriteToken(token);
         }
 
 

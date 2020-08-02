@@ -1,0 +1,24 @@
+<!--  za sekoj sprat treba da ima nova Table!! -->
+<!-- sekoj Sprat e podelen na 2 dela spored paren i NeParen -->
+<table>
+  <tr>
+  
+    <th *ngFor="let room of rooms">
+      <button class="btn btn-primary"  [routerLink]="['/rooms/', room.id ]">
+        {{room.number}} <br>
+        <div *ngFor="let bed of bedList(room.beds, room.occupiedBeds)" style=" display: inline;">
+          <input *ngIf="bed == 0" type="checkbox" id="huey" name="drone" value="huey" checked>
+          <input *ngIf="bed == 1" type="checkbox" id="huey" name="drone" value="huey">
+  
+        </div>
+      </button>
+      <br>
+
+     
+    </th>
+  </tr>
+
+
+</table>
+
+<!-- *ngIf="room.floor == 1" -->

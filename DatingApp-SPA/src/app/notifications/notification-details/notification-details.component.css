@@ -1,0 +1,29 @@
+.page {
+    position: relative;
+    background: rgb(227, 236, 226);
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 0.5cm;
+    box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+    width: 21cm;
+    height: 29.7cm; 
+    text-align: center
+  }
+
+.container{
+    /* position: fixed; */
+    padding-top: 20px;
+
+}
+#date{
+    position: absolute;
+    left: 1%;
+    top: 0%;
+    
+}
+#readBy{
+
+    position: absolute;
+    right: 1%;
+    top: 0%;
+}

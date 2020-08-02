@@ -1,0 +1,79 @@
+<div class=" container mt-4">
+  <div class="row">
+    <div class="col col-sm-4">
+      <div class="card">
+        <!-- <img src="{{user.photoUrl || '../../../assets/user.png'}}" alt="{{user.knownAs}}" class="card-img-top img-thumbnail"> -->
+        <div class="card-body">
+          <h1> {{room.number}}</h1>
+
+        </div>
+        <div>
+          <strong>Floor: {{room.floor}} </strong>
+        </div>
+        <div>
+          <strong>Number of beds: {{room.beds}} </strong>
+        </div>
+        <div>
+          <strong>Occupated beds: {{room.occupiedBeds}}</strong>
+        </div>
+      </div>
+
+    </div>
+    <!-- 92 tabs and more info in Details -->
+    <div class="col-sm-8">
+      <div class="tab-panel">
+        <tabset #memberTabs>
+
+          <tab heading="Students">
+            <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">#ID</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Gender</th>
+                  <th scope="col">Age</th>
+                  <th scope="col">School</th>
+                  <th scope="col">School Year</th>
+                  <th scope="col">LastName</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let student of room.student">
+                  <th scope="row">{{student.id}}</th>
+                  <td>{{student.username}}</td>
+                  <td>{{student.gender}}</td>
+                  <td>{{student.age}}</td>
+                  <!-- <td>{{student.s}}</td> -->
+                </tr>
+              </tbody>
+            </table>
+            <div>
+
+            </div>
+          </tab>
+          <tab heading="Room">
+            <h4>Room number</h4>
+          </tab>
+          <tab heading="Photos">
+            <h4>Phots will go here</h4>
+          </tab>
+
+        </tabset>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+

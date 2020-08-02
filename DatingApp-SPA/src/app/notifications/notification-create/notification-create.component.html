@@ -1,0 +1,56 @@
+<form [formGroup]="registerForm" (ngSubmit)="register()">
+  <h2 class="text-center text-primary">New Notification</h2>
+  <hr>
+
+
+
+  <div class="form-group">
+    <input type="text"
+      [ngClass]="{'is-invalid': registerForm.get('title').errors && registerForm.get('title').touched }"
+      class="form-control" formControlName="title" placeholder="Title">
+    <div class="invalid-feedback">Title</div>
+  </div>
+
+  <div class="form-group">
+    <input type="text"
+      [ngClass]="{'is-invalid': registerForm.get('description').errors && registerForm.get('description').touched}"
+      class="form-control" placeholder="description" formControlName="description">
+    <div class="invalid-feedback"
+      *ngIf="registerForm.get('description').touched && registerForm.get('description').hasError('required')">Description is required
+    </div>
+  </div>
+
+
+  <div class="form-group">
+    <input type="text" [ngClass]="{'is-invalid': registerForm.get('content').errors && registerForm.get('content').touched}"
+      class="form-control" placeholder="content" formControlName="content">
+    <div class="invalid-feedback"
+      *ngIf="registerForm.get('content').touched && registerForm.get('content').hasError('required')">The content of this message is required
+    </div>
+  </div>
+
+
+
+
+  <div class="form-group text-center">
+    <button class="btn btn-success" [disabled]="!registerForm.valid" type="submit">Register</button>
+    <!-- <button class="btn btn-default" type="button" (click)="cancel()">Cancel</button> -->
+  </div>
+
+</form>
+
+<!-- <body ng-app="app">
+  <div ng-controller="controllerName">
+    <p>Type comma ( , ) separated number.</p>
+    <input type="text" ng-model="listNum" placeholder="Enter numbers" ng-list size=60>
+    <pre>{{listNum|json}}</pre>
+  </div>
+  <script>
+    var app = angular.module("app", []);
+    app.controller('controllerName', ['$scope', function ($scope) {
+      $scope.listNum = [2, 3, 4]
+    }]);
+    console.log(listNum);
+  </script> -->
+<!-- <p>input {{registerForm.value | json}}</p>
+<p>status {{registerForm.status | json}}</p> -->

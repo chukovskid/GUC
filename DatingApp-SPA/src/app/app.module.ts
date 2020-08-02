@@ -44,6 +44,19 @@ import { PhotoEditorComponent } from './members/photo-editor/photo-editor.compon
 import { ListsResolver } from './_resolvers/lists.resolver';
 import { MessagesResolver } from './_resolvers/messages.resolver';
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { HasRoleDirective } from './_directives/hasRole.directive';
+import { RoomRegisterComponent } from './rooms/room-register/room-register.component';
+import { RoomDetailsComponent } from './rooms/room-details/room-details.component';
+import { RoomResolver } from './_resolvers/room.resolver';
+import { RoomsResolver } from './_resolvers/rooms.resolver';
+import { RoomComponent } from './roomList/room.component';
+import { NotificationResolver } from './_resolvers/notification.resolver';
+import { NotificationsResolver } from './_resolvers/notifications.resolver';
+import { NotificationDetailsComponent } from './notifications/notification-details/notification-details.component';
+import { NotificationCreateComponent } from './notifications/notification-create/notification-create.component';
+import { NotificationsListComponent } from './notifications/notifications-list/notifications-list.component';
+
 
 
 export function tokenGetter() {
@@ -63,7 +76,15 @@ export function tokenGetter() {
       MemberDetailComponent,
       MemberEditComponent,
       MemberMessagesComponent,
-      PhotoEditorComponent
+      PhotoEditorComponent,
+      AdminPanelComponent,
+      HasRoleDirective,
+      RoomRegisterComponent,
+      RoomDetailsComponent,
+      RoomComponent,
+      NotificationDetailsComponent,
+      NotificationCreateComponent,
+      NotificationsListComponent,
    ],
    imports: [
       BrowserModule,
@@ -101,7 +122,11 @@ export function tokenGetter() {
       MemberListResolver,
       MemberEditResolver,
       ListsResolver,
+      RoomsResolver,
+      RoomResolver,
       MessagesResolver,
+      NotificationResolver,
+      NotificationsResolver,
 
    ],
    bootstrap: [

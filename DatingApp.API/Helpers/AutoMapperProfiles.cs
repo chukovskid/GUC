@@ -11,8 +11,8 @@ namespace DatingApp.API.Helpers
         {
 
             CreateMap<User, UserForListDto>() // delot posle ova kazuva da ide u OvojUser.Photos.IsMain.Url 
-            .ForMember(dest => dest.PhotoUrl, opt =>
-                opt.MapFrom(src => src.Photos.FirstOrDefault(p => p.IsMain).Url))
+            .ForMember(dest => dest.PhotoUrl, opt => // vo UserForListDto kako promenliva PhotoUrl stavi ja ...
+                opt.MapFrom(src => src.Photos.FirstOrDefault(p => p.IsMain).Url)) // ... prvata photo vo user.Photos kaj koja isMain=true
                     .ForMember(dest => dest.Age, opt => // najdi go Age vo Dto i daj mu vrednost od User.FUNKCIJA.Godini
                          opt.MapFrom(src => src.DateOfBirth.CalculateAge()));  // Ova e so da bara u MapForm(User)
 
@@ -27,7 +27,9 @@ namespace DatingApp.API.Helpers
                 .ForMember(m => m.RecipientPhotoUrl, opt => opt.MapFrom(u => u.Recipient.Photos.FirstOrDefault(p => p.IsMain).Url));
 
 
-
+            CreateMap<NotificationForCreationDto, Notifications>();
+            CreateMap<RoomForCreationDto, Room>();
+            CreateMap<Room, RoomForCreationDto>();
             CreateMap<Photo, PhotosForDetailedDto>();
             CreateMap<UserForUpdateDto, User>();
             CreateMap<Photo, PhotoForReturnDto>(); //  podatocite od Photo modelot im davam pat do PhotoForReturnDto

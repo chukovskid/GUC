@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="page">
+    <p id="date">{{notif.created | timeago}}</p>
+    <p id="readBy">Seen by: {{notif.readByCount}} students</p>
+
+    <br>
+
+    <h2 > 
+       {{notif.title}}
+     </h2>
+     <br>
+     <hr>
+     <br>
+     <p>
+      {{notif.content}}
+
+     </p>
+
+  
+  </div>
+
+</div>
+
+
+
+
+<ul>
+
+    <li  > 
+     Seen by : {{ notif.readByCount}}
+    </li>
+    <ul *ngFor="let user of readers">
+      <li  > 
+        user : {{ user.userName}}
+       </li>
+    </ul>
+</ul>

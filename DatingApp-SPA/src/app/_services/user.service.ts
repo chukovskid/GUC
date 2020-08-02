@@ -7,6 +7,7 @@ import { PaginatedResult } from '../_models/pagination';
 import { map } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
 import { Message } from '../_models/message';
+import { Room } from '../_models/room';
 
 @Injectable({
   providedIn: 'root',
@@ -113,6 +114,32 @@ export class UserService {
   }
   markAsRead(id: number, messageId: number){
     return this.http.post(this.baseUrl + 'users/' + id + '/message/' + messageId + '/read', {}).subscribe();
+  }
+  getRooms(id: number){
+    return this.http.get(this.baseUrl + 'users/' + id + '/rooms');
+  }
+  getRoom(id: number, roomId: number){
+    return this.http.get(this.baseUrl + 'users/' + id + '/rooms/' + roomId);
+  }
+  CreateRoom(id: number, room: Room){
+    console.log(room);
+    return this.http.post(this.baseUrl + 'users/' + id + '/rooms', room);
+  }
 
+  getNotifications(id: number){
+    return this.http.get(this.baseUrl + 'users/' + id + '/notifications');
+  }
+  getNotification(id: number, notificationId: number){
+    return this.http.get(this.baseUrl + 'users/' + id + '/notifications/' + notificationId);
+  }
+  CreateNotification(id: number, notification: Notification){
+    return this.http.post(this.baseUrl + 'users/' + id + '/notifications', notification);
+  }
+  sendARead(id: number, notificationId: number){
+    return this.http.post(this.baseUrl + 'users/' + id + '/notifications/' + notificationId + '/read', {}).subscribe();
+    // zosto mora Subscribe koga prakjam Seen?
+  }
+  getFullUsers(){
+    return this.http.get<User[]>(this.baseUrl + 'users/full');
   }
 }

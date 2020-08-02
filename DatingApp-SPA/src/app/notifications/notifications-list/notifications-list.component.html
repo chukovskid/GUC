@@ -1,0 +1,56 @@
+<div class="row justify-content-md-center notifications">
+  <div class="col-sm-10 " >
+  
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">#ID</th>
+                <th scope="col"><strong>Title</strong></th>
+                <th scope="col">Content</th>
+                <th scope="col">Date</th>
+                <th scope="col">seen by: </th>
+  
+              </tr>
+            </thead>
+            <tbody>
+              <tr  *ngFor="let notification of notifications.reverse()" (click)="AddAReader(notification.id)" [routerLink]="['/notifications/' + notification.id]">
+                <th scope="row">{{notification.id}}</th>
+                <td class="notification">{{notification.title}}</td>
+                <td class="notification">{{notification.description}}</td>
+                <td class="notification">{{notification.created | date}}</td>
+                <td class="notification">{{notification.readByCount}} students</td>
+              </tr>
+            </tbody>
+          </table>
+          <div>
+  
+          </div> 
+    </div>
+  </div>
+  
+
+
+<!--  
+
+<ul *ngFor="let notification of notifications" >
+<div (click)="AddAReader(notification.id)" [routerLink]="['/notifications/' + notification.id]">
+  <li > 
+    Title: {{notification.title}}
+   </li>
+   
+   <li > 
+     Description: {{notification.description}}
+    </li>
+    
+   <li > 
+     Created at: {{notification.created | date}}
+    </li>
+ 
+    <li  > 
+     Seen by : {{ notification.readByCount}}
+    </li>
+ 
+
+</div>
+  
+</ul> -->

@@ -37,14 +37,15 @@ namespace DatingApp.API.Data
 
         public async Task<User> GetUser(int id)
         {
-            var user = await _context.User.Include(p => p.Photos).FirstOrDefaultAsync(u => u.Id == id);
+            var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(u => u.Id == id);
             return user;
         }
 
         public async Task<PagedList<User>> GetUsers(UserParams userParams)
         {
-            var users = _context.User.Include(p => p.Photos).AsQueryable(); // mora .AsQueryble da go stavam za da ne javuva error dole
+            var users = _context.Users.Include(p => p.Photos).AsQueryable(); // mora .AsQueryble da go stavam za da ne javuva error dole
             users = users.OrderByDescending(u => u.LastActive).AsQueryable();
+
 
             users = users.Where(u => u.Gender == userParams.Gender); // gi Trgam site site od ist Pol (ostanuvaat site so Razlicen)// 145// 
             users = users.Where(u => u.Id != userParams.UserId);
@@ -67,6 +68,28 @@ namespace DatingApp.API.Data
                 var minDob = DateTime.Today.AddYears(-userParams.maxAge);
                 users = users.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob);
             }
+            // if (userParams.Search != null)
+            // {
+
+            //     foreach (var user in users)
+            //     {
+            //         for (int i = 0; i < user.UserName.Length && i < userParams.Search.Length; ++i)
+            //         {
+            //             if (user.UserName[i] != userParams.Search[i])
+            //             {
+            //                 break;
+            //             } else if (user.UserName[i] == userParams.Search[i])
+            //             {
+            //                 return 
+            //             }
+                        
+            //         }
+            //     }
+
+            // }
+
+
+
             if (userParams.orderBy != null)
             {
                 switch (userParams.orderBy)
@@ -84,7 +107,7 @@ namespace DatingApp.API.Data
 
         public async Task<IEnumerable<int>> GerUserLikes(int id, bool likers) // 155
         {
-            var user = await _context.User
+            var user = await _context.Users
             .Include(l => l.Likers)
             .Include(l => l.Likees)
             .FirstOrDefaultAsync(u => u.Id == id);
@@ -154,15 +177,62 @@ namespace DatingApp.API.Data
 
         public async Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId)
         {
-             var messages = await _context.Messages
-            .Include(s => s.Sender).ThenInclude(p => p.Photos)
-            .Include(r => r.Recipient).ThenInclude(p => p.Photos)
-            .Where(s => s.SenderId == userId && s.SenderDeleted == false && s.RecipientId == recipientId
-            || s.SenderId == recipientId && s.RecipientDelete == false && s.RecipientId == userId)
-            .OrderByDescending(d => d.MessageSent)
-            .ToListAsync();
+            var messages = await _context.Messages
+           .Include(s => s.Sender).ThenInclude(p => p.Photos)
+           .Include(r => r.Recipient).ThenInclude(p => p.Photos)
+           .Where(s => s.SenderId == userId && s.SenderDeleted == false && s.RecipientId == recipientId
+           || s.SenderId == recipientId && s.RecipientDelete == false && s.RecipientId == userId)
+           .OrderByDescending(d => d.MessageSent)
+           .ToListAsync();
 
             return messages;
+        }
+
+        public async Task<Room> GetRoom(int Id)
+        {
+            // var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(u => u.Id == id);
+            var room = await _context.Rooms.Include(p => p.Student).FirstOrDefaultAsync(r => r.Id == Id);
+            return room;
+        }
+
+        public async Task<IEnumerable<Room>> GetRooms()
+        {
+            var rooms = await _context.Rooms.ToListAsync();
+            return rooms;
+        }
+
+        public async Task<RoomPhoto> GetRoomPhoto(int id)
+        {
+            var roomPhoto = await _context.RoomPhotos.FirstOrDefaultAsync(u => u.Id == id);
+            return roomPhoto;
+
+        }
+
+        public async Task<Notifications> GetNotification(int notificationId)
+        {
+            var notification = await _context.Notifications.Include(u => u.notificationUsers).FirstOrDefaultAsync(n => n.Id == notificationId);
+            return notification;
+        }
+
+        public async Task<IEnumerable<Notifications>> GetNotifications()
+        {
+            var notifications = await _context.Notifications.Include(u => u.notificationUsers).ToListAsync();
+            return notifications;
+        }
+
+        public async Task<NotificationUser> GetNotificationUser(int userId, int notificationId)
+        {
+
+            var notificationUser = await _context.NotificationUser.FirstOrDefaultAsync(u =>
+                u.ReaderId == userId && u.NotificationId == notificationId);
+            return notificationUser;
+
+        }
+
+        public async Task<IEnumerable<User>> GetFullUsers()
+        {
+            var users = _context.Users.Include(p => p.Photos).AsQueryable();
+            return users;
         }
     }
 }

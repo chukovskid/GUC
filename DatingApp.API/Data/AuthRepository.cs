@@ -20,14 +20,14 @@ namespace DatingApp.API.Data
          public async Task<User> Login(string username, string password) // sakame password da bide HASH
         {   
             // vo Login za nav slikata mora da pratam i photo 117 
-           var user = await _context.User.Include(p => p.Photos).FirstOrDefaultAsync(x => x.Username == username); // najdi go Userot vo _context koj ima ist Username
+           var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(x => x.UserName == username); // najdi go Userot vo _context koj ima ist Username
            
             if (user == null){
                  return null;
             }
             
-            if (!VeryfyPasswordHash(password, user.PasswordHash, user.PasswordSalt)) // ako NE e tocen..ne postoi
-            return null;
+            // if (!VeryfyPasswordHash(password, user.PasswordHash, user.PasswordSalt)) // ako NE e tocen..ne postoi
+            // return null;
 
             return user;
             
@@ -50,10 +50,10 @@ namespace DatingApp.API.Data
             byte[] passwordHash, passwordSalt; // vo ovie vrednosti ke stavam hash i salt preku dolnata funk
             CreatePasswordHash(password, out passwordHash, out passwordSalt); // namesto da gi zima vrednostite gi zima kako PRAZNI mesta sto ke im DADE vrednost
        
-            user.PasswordHash = passwordHash; // dobieniot password sto go vnesol userot, mu pravam Hash i Salt i mu gi davam na modelot User
-            user.PasswordSalt = passwordSalt;
+            // user.PasswordHash = passwordHash; // dobieniot password sto go vnesol userot, mu pravam Hash i Salt i mu gi davam na modelot User
+            // user.PasswordSalt = passwordSalt;
 
-            await _context.User.AddAsync(user); // so ova Asinhrono go dodavam user vo db na User, normalno
+            await _context.Users.AddAsync(user); // so ova Asinhrono go dodavam user vo db na User, normalno
             await _context.SaveChangesAsync(); // sekako so sekoja promena na db si sejvnuvam
 
             return user;       
@@ -69,7 +69,7 @@ namespace DatingApp.API.Data
 
         public async Task<bool> UserExists(string username) // cisto proverka za Username dali postoi
         {
-            if (await _context.User.AnyAsync(x => x.Username == username)){
+            if (await _context.Users.AnyAsync(x => x.UserName == username)){
                 return true;
             }
             return false;
